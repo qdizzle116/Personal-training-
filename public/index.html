@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Divine Strength Personal Training</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <span class="logo-icon"><i class="fas fa-dumbbell"></i></span>
+    <div class="logo-text">
+      <span class="logo-title">Divine Strength</span>
+      <span class="logo-sub">Personal Training</span>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="#dashboard" class="nav-item active" data-page="dashboard"><i class="fas fa-chart-line"></i><span>Dashboard</span></a>
+    <a href="#clients"   class="nav-item" data-page="clients"><i class="fas fa-users"></i><span>Clients</span></a>
+    <a href="#calendar"  class="nav-item" data-page="calendar"><i class="fas fa-calendar-alt"></i><span>Calendar</span></a>
+    <a href="#settings"  class="nav-item" data-page="settings"><i class="fas fa-cog"></i><span>Settings</span></a>
+  </nav>
+  <div class="sidebar-footer"><div class="sidebar-version">NASM OPT™ Model</div></div>
+</aside>
+
+<main class="main-content">
+  <header class="topbar">
+    <button class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></button>
+    <div class="topbar-title" id="topbarTitle">Dashboard</div>
+    <div class="topbar-actions"><span class="today-date" id="todayDate"></span></div>
+  </header>
+
+  <!-- DASHBOARD -->
+  <section class="page active" id="page-dashboard">
+    <div class="page-header">
+      <div><h1>Dashboard</h1><p>Welcome back — here's your training overview.</p></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-icon red"><i class="fas fa-users"></i></div><div class="stat-info"><div class="stat-value" id="stat-clients">—</div><div class="stat-label">Total Clients</div></div></div>
+      <div class="stat-card"><div class="stat-icon"><i class="fas fa-calendar-day"></i></div><div class="stat-info"><div class="stat-value" id="stat-today">—</div><div class="stat-label">Sessions Today</div></div></div>
+      <div class="stat-card"><div class="stat-icon"><i class="fas fa-fire"></i></div><div class="stat-info"><div class="stat-value" id="stat-week">—</div><div class="stat-label">This Week</div></div></div>
+    </div>
+    <div class="dashboard-grid">
+      <div class="card">
+        <div class="card-header"><h3><i class="fas fa-bolt"></i> Today's Sessions</h3><button class="btn-sm btn-red" onclick="App.showPage('calendar')"><i class="fas fa-plus"></i> Schedule</button></div>
+        <div class="card-body" id="today-sessions-list"><div class="empty-state"><i class="fas fa-calendar-check"></i><p>No sessions today</p></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3><i class="fas fa-user-plus"></i> Recent Clients</h3><button class="btn-sm btn-red" onclick="Clients.openAddWizard()"><i class="fas fa-plus"></i> Add Client</button></div>
+        <div class="card-body" id="recent-clients-list"><div class="empty-state"><i class="fas fa-users"></i><p>No clients yet</p></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3><i class="fas fa-layer-group"></i> NASM OPT Model — 5 Phases of Periodization</h3></div>
+      <div class="card-body">
+        <div class="opt-phases-bar">
+          <div class="phase-pill" style="--pc:#3b82f6"><span class="phase-num" style="background:#3b82f6">1</span><span class="phase-name">Stabilization<br>Endurance</span></div>
+          <div class="phase-arrow"><i class="fas fa-chevron-right"></i></div>
+          <div class="phase-pill" style="--pc:#8b5cf6"><span class="phase-num" style="background:#8b5cf6">2</span><span class="phase-name">Strength<br>Endurance</span></div>
+          <div class="phase-arrow"><i class="fas fa-chevron-right"></i></div>
+          <div class="phase-pill" style="--pc:#f59e0b"><span class="phase-num" style="background:#f59e0b">3</span><span class="phase-name">Muscular<br>Hypertrophy</span></div>
+          <div class="phase-arrow"><i class="fas fa-chevron-right"></i></div>
+          <div class="phase-pill" style="--pc:#ef4444"><span class="phase-num" style="background:#ef4444">4</span><span class="phase-name">Maximal<br>Strength</span></div>
+          <div class="phase-arrow"><i class="fas fa-chevron-right"></i></div>
+          <div class="phase-pill" style="--pc:#10b981"><span class="phase-num" style="background:#10b981">5</span><span class="phase-name">Power</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLIENTS -->
+  <section class="page" id="page-clients">
+    <div class="page-header">
+      <div><h1>Clients</h1><p>Manage training clients and their programs.</p></div>
+      <button class="btn btn-red" onclick="Clients.openAddWizard()"><i class="fas fa-user-plus"></i> Add Client</button>
+    </div>
+    <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="client-search" placeholder="Search by name or email…" oninput="Clients.filter(this.value)"/></div>
+    <div id="clients-list" class="clients-grid"><div class="empty-state large"><i class="fas fa-users"></i><p>No clients yet. Add your first!</p></div></div>
+  </section>
+
+  <!-- CALENDAR -->
+  <section class="page" id="page-calendar">
+    <div class="page-header">
+      <div><h1>Calendar</h1><p>Schedule and manage training sessions.</p></div>
+      <button class="btn btn-red" onclick="CalendarApp.openNewSession()"><i class="fas fa-plus"></i> New Session</button>
+    </div>
+    <div class="card"><div class="card-body no-pad"><div id="calendar"></div></div></div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="page" id="page-settings">
+    <div class="page-header"><div><h1>Settings</h1><p>Configure your dashboard and email notifications.</p></div></div>
+    <div class="settings-grid">
+      <div class="card">
+        <div class="card-header"><h3><i class="fas fa-id-card"></i> Trainer Info</h3></div>
+        <div class="card-body">
+          <div class="form-group"><label>Your Name</label><input type="text" id="set-trainer-name" placeholder="e.g. Alex Johnson"/></div>
+          <div class="form-group"><label>Your Email (receives daily summary)</label><input type="email" id="set-trainer-email" placeholder="trainer@example.com"/></div>
+          <div class="form-group"><label>Dashboard URL (used in email link)</label><input type="text" id="set-dashboard-url" placeholder="http://localhost:3000"/></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3><i class="fas fa-envelope"></i> Email Notifications</h3></div>
+        <div class="card-body">
+          <div class="form-group toggle-group"><label>Enable Daily Schedule Email</label><label class="toggle"><input type="checkbox" id="set-email-enabled"/><span class="toggle-slider"></span></label></div>
+          <div class="form-group"><label>Send Daily Email At</label><input type="time" id="set-daily-time" value="06:00"/></div>
+          <hr class="divider"/>
+          <p class="section-subtitle">SMTP Configuration</p>
+          <div class="form-group"><label>SMTP Host</label><input type="text" id="set-smtp-host" placeholder="smtp.gmail.com"/></div>
+          <div class="form-row">
+            <div class="form-group"><label>Port</label><input type="number" id="set-smtp-port" placeholder="587"/></div>
+            <div class="form-group toggle-group"><label>SSL/TLS</label><label class="toggle"><input type="checkbox" id="set-smtp-secure"/><span class="toggle-slider"></span></label></div>
+          </div>
+          <div class="form-group"><label>SMTP Username / Email</label><input type="text" id="set-smtp-user" placeholder="your@gmail.com"/></div>
+          <div class="form-group"><label>Password / App Password</label><input type="password" id="set-smtp-pass" placeholder="••••••••"/></div>
+          <div class="form-actions-row">
+            <button class="btn btn-outline" onclick="Settings.testEmail()"><i class="fas fa-paper-plane"></i> Test Email</button>
+            <button class="btn btn-outline" onclick="Settings.sendNow()"><i class="fas fa-bolt"></i> Send Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="form-actions"><button class="btn btn-red" onclick="Settings.save()"><i class="fas fa-save"></i> Save Settings</button></div>
+  </section>
+</main>
+
+<!-- CLIENT DETAIL MODAL -->
+<div class="modal-overlay" id="clientDetailModal">
+  <div class="modal modal-xl">
+    <div class="modal-header"><h2 id="clientDetailTitle">Client Details</h2><button class="modal-close" onclick="Clients.closeDetail()"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <div class="client-detail-tabs">
+        <button class="tab-btn active" onclick="Clients.switchTab('overview',this)">Overview</button>
+        <button class="tab-btn" onclick="Clients.switchTab('plan',this)">Training Plan</button>
+        <button class="tab-btn" onclick="Clients.switchTab('sessions',this)">Sessions</button>
+        <button class="tab-btn" onclick="Clients.switchTab('parq',this)">PAR-Q</button>
+      </div>
+      <div id="clientDetailContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD CLIENT WIZARD MODAL -->
+<div class="modal-overlay" id="addClientModal">
+  <div class="modal modal-lg">
+    <div class="modal-header"><h2>Add New Client</h2><button class="modal-close" onclick="Clients.closeWizard()"><i class="fas fa-times"></i></button></div>
+    <div class="wizard-steps" id="wizardSteps">
+      <div class="wizard-step active" data-step="1"><div class="step-circle">1</div><div class="step-label">Basic Info</div></div>
+      <div class="wizard-step-line"></div>
+      <div class="wizard-step" data-step="2"><div class="step-circle">2</div><div class="step-label">PAR-Q</div></div>
+      <div class="wizard-step-line"></div>
+      <div class="wizard-step" data-step="3"><div class="step-circle">3</div><div class="step-label">Assessment</div></div>
+      <div class="wizard-step-line"></div>
+      <div class="wizard-step" data-step="4"><div class="step-circle">4</div><div class="step-label">Review</div></div>
+    </div>
+    <div class="modal-body wizard-body" id="wizardContent"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" id="wizardPrev" onclick="Clients.wizardPrev()" style="display:none"><i class="fas fa-arrow-left"></i> Back</button>
+      <button class="btn btn-red" id="wizardNext" onclick="Clients.wizardNext()">Next <i class="fas fa-arrow-right"></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- SESSION MODAL -->
+<div class="modal-overlay" id="sessionModal">
+  <div class="modal modal-sm">
+    <div class="modal-header"><h2 id="sessionModalTitle">Schedule Session</h2><button class="modal-close" onclick="CalendarApp.closeModal()"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body">
+      <input type="hidden" id="session-id"/>
+      <div class="form-group"><label>Client *</label><select id="session-client"></select></div>
+      <div class="form-row">
+        <div class="form-group"><label>Date *</label><input type="date" id="session-date"/></div>
+        <div class="form-group"><label>Time</label><input type="time" id="session-time"/></div>
+      </div>
+      <div class="form-group"><label>Duration (minutes)</label><input type="number" id="session-duration" value="60" min="15" max="180" step="15"/></div>
+      <div class="form-group"><label>Phase / Focus</label><input type="text" id="session-phase" placeholder="e.g. Phase 1 – Stabilization"/></div>
+      <div class="form-group"><label>Notes</label><textarea id="session-notes" rows="3" placeholder="Session notes…"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" id="session-delete-btn" onclick="CalendarApp.deleteSession()" style="display:none"><i class="fas fa-trash"></i> Delete</button>
+      <button class="btn btn-red" onclick="CalendarApp.saveSession()"><i class="fas fa-save"></i> Save</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="app.js"></script>
+</body>
+</html>
